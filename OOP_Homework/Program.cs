@@ -1,4 +1,4 @@
-﻿public class Book
+public class Book
 {
     public string Title { get; set; }
     public string Author { get; set; }
@@ -77,24 +77,65 @@ class Program
             {
                 case "1":
                     Console.Write("How many books do you want to add? ");
-                    int count = Convert.ToInt32(Console.ReadLine());
-
-                    for (int i = 0; i < count; i++)
+                    int count;
+                    try
                     {
-                        Console.WriteLine($"Enter details for Book {i + 1}:");
-                        Console.Write("Title: ");
-                        string title = Console.ReadLine();
-                        Console.Write("Author: ");
-                        string author = Console.ReadLine();
-                        Console.Write("Category: ");
-                        string category = Console.ReadLine();
-                        Console.Write("Year: ");
-                        int year = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Price: ");
-                        double price = Convert.ToDouble(Console.ReadLine());
+                        count = Convert.ToInt32(Console.ReadLine());
+                        for (int i = 0; i < count; i++)
+                        {
+                            bool inputError = false; 
 
-                        Book newBook = new Book(title, author, category, year, price);
-                        LibraryManager.AddBook(newBook);
+                            Console.WriteLine($"Enter details for Book {i + 1}:");
+                            Console.Write("Title: ");
+                            string title = Console.ReadLine();
+
+                            Console.Write("Author: ");
+                            string author = Console.ReadLine();
+
+                            Console.Write("Category: ");
+                            string category = Console.ReadLine();
+
+                            int year;
+                            double price;
+                            try
+                            {
+                                Console.Write("Year: ");
+                                year = Convert.ToInt32(Console.ReadLine());
+
+                                Console.Write("Price: ");
+                                price = Convert.ToDouble(Console.ReadLine());
+
+                                Book newBook = new Book(title, author, category, year, price);
+                                LibraryManager.AddBook(newBook);
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid input for year or price. Please try again.");
+                                inputError = true;
+                            }
+                            catch (Exception exception)
+                            {
+                                Console.WriteLine($"Unexpected error: {exception.Message}");
+                                inputError = true;
+                            }
+
+                            if (inputError)
+                            {
+                                i--;
+                            }
+                        }
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input for book count.");
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine($"Unexpected error: {exception.Message}");
+                    }
+                    finally
+                    {
+                        Console.WriteLine("Returning to menu...");
                     }
                     break;
 
